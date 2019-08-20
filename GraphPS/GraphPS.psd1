@@ -83,7 +83,15 @@
     # FormatsToProcess = @()
     
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-    # NestedModules = @()
+    NestedModules = @(
+        ".\functions\helpers.ps1",
+        ".\functions\connection.ps1",
+        ".\functions\get-graphpsauditlog.ps1",
+        ".\functions\get-graphpscalendar.ps1",
+        ".\functions\get-graphpscalendargroups.ps1",
+        ".\functions\get-graphpsevents.ps1",
+        ".\functions\get-graphpsuser.ps1"
+    )
     
     # Functions to export from this module
     FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*'
