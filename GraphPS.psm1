@@ -329,5 +329,3 @@ function Get-GraphPSSample {
     return $graphResult
 }
 #>
-
-#Export-ModuleMember -Function Connect-GraphPS,Get-GraphPS*
