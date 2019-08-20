@@ -65,7 +65,10 @@ function Invoke-MSGraphQuery {
 
     $QueryResults = @()
     if ($Method -eq "Get") {
+        $i = 0
         do {
+            $i++
+            Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Fetching page $i"
             $Results = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json"
             if ($null -ne $Results.value) {
                 $QueryResults += $Results.value
@@ -83,15 +86,6 @@ function Invoke-MSGraphQuery {
     Return $QueryResults
 }
 
-function Test-Connection {
-    $isValid = $true
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
-        $isValid = $false
-    }
-    return $isValid
-}
-
 Function Merge-Hashtables([ScriptBlock]$Operator) {
     <#
         .SYNOPSIS
@@ -102,26 +96,32 @@ Function Merge-Hashtables([ScriptBlock]$Operator) {
             From: https://stackoverflow.com/questions/8800375/merging-hashtables-in-powershell-how
 
         .EXAMPLE
-            Collecting all values in array
-            PS C:> $h1, $h2, $h3 | Merge-Hashtables
+            # Collecting all values in array
+            $h1, $h2, $h3 | Merge-Hashtables
 
-            Overwrite using last value:
-            PS C:> $h1, $h2, $h3 | Merge-Hashtables {$_[-1]}
+        .EXAMPLE
+            # Overwrite using last value:
+            $h1, $h2, $h3 | Merge-Hashtables {$_[-1]}
             
-            Overwrite using first value:
-            PS C:> $h1, $h2, $h3 | Merge-Hashtables {$_[0]}
+        .EXAMPLE
+            # Overwrite using first value:
+            $h1, $h2, $h3 | Merge-Hashtables {$_[0]}
 
-            Overwrite using max value:
-            PS C:> $h1, $h2, $h3 | Merge-Hashtables {($_ | Measure-Object -Maximum).Maximum}
+        .EXAMPLE
+            # Overwrite using max value:
+            $h1, $h2, $h3 | Merge-Hashtables {($_ | Measure-Object -Maximum).Maximum}
 
-            Take the average values
-            PS C:\> $h1, $h2, $h3 | Merge-Hashtables {($_ | Measure-Object -Average).Average}
+        .EXAMPLE
+            # Take the average values
+            $h1, $h2, $h3 | Merge-Hashtables {($_ | Measure-Object -Average).Average}
 
-            Join the values together
-            PS C:\> $h1, $h2, $h3 | Merge-Hashtables {$_ -Join ""}
+        .EXAMPLE
+            # Join the values together
+            $h1, $h2, $h3 | Merge-Hashtables {$_ -Join ""}
 
-            Sort the values list
-            PS C:\> $h1, $h2, $h3 | Merge-Hashtables {$_ | Sort-Object}
+        .EXAMPLE
+            # Sort the values list
+            $h1, $h2, $h3 | Merge-Hashtables {$_ | Sort-Object}
     #>
     $Output = @{}
     ForEach ($Hashtable in $Input) {

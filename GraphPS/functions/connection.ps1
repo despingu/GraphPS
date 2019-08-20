@@ -43,3 +43,12 @@ function Get-GraphPSConnectionInfo {
     Write-Host "Graph base uri: $Script:graphUri"
     Write-Host "Graph version: $Script:graphVersion"
 }
+
+function Test-Connection {
+    $isValid = $true
+    if (-not $Script:connected) {
+        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+        $isValid = $false
+    }
+    return $isValid
+}
