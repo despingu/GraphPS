@@ -86,7 +86,7 @@
     # NestedModules = @()
     
     # Functions to export from this module
-    FunctionsToExport = 'Connect-GraphPS','Get-GraphPS*'
+    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*'
     
     # Cmdlets to export from this module
     CmdletsToExport = ''

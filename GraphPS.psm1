@@ -134,6 +134,15 @@ function Invoke-MSGraphQuery {
     Return $QueryResults
 }
 
+function Test-Connection {
+    $isValid = $true
+    if (-not $Script:connected) {
+        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+        $isValid = $false
+    }
+    return $isValid
+}
+
 function Connect-GraphPS {
     param(
         [Parameter(Mandatory=$true)]
@@ -156,6 +165,18 @@ function Connect-GraphPS {
     $Script:graphVersion = $Version
     Set-AccessToken -TenantName $TenantName -ClientID $AppID -ClientSecret $AppSecret -ResourceAppIdURI $ResourceAppIdURI
     $Script:connected = $true
+}
+
+function Disconnect-GraphPS {
+    $Script:tenantName = [string]::Empty
+    $Script:clientID = [string]::Empty
+    $Script:clientSecret = [string]::Empty
+    $Script:resourceAppIdURI = [string]::Empty
+    $Script:token = [string]::Empty
+    $Script:tokenRenewTime = [datetime]::MinValue
+    $Script:connected = $false
+    $Script:graphUri = "https://graph.microsoft.com"
+    $Script:graphVersion = [string]::Empty
 }
 
 function Get-GraphPSConnectionInfo {
@@ -195,8 +216,7 @@ function Get-GraphPSUser {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
 
@@ -213,8 +233,7 @@ function Get-GraphPSAuditLogsSignIns {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
 
@@ -237,8 +256,7 @@ function Get-GraphPSUserEvents {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
     $endpoint = ""
@@ -267,8 +285,7 @@ function Get-GraphPSUserCalendarGroups {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
     $endpoint = "users/$identity/calendarGroups"
@@ -291,8 +308,7 @@ function Get-GraphPSUserCalendars {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
     $endpoint = ""
@@ -318,8 +334,7 @@ function Get-GraphPSSample {
         [Parameter(Mandatory=$false)]
         [string]$selectExpression
     )
-    if (-not $Script:connected) {
-        Write-Error "Please run Connect-GraphPS cmdlet before running this command."
+    if (-not (Test-Connection)) {
         return
     }
 
