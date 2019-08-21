@@ -14,15 +14,15 @@ function Remove-GraphPSUser {
     }
 
     if(-not $Force) {
-        $question = "Are you sure you want to delete user $identity?"
+        $question = "Are you sure you want to delete user $($identity)?"
         $choices  = '&Yes', '&No'
         $decision = $Host.UI.PromptForChoice($null, $question, $choices, 1)
-        if ($decision -eq 0) {
+        if ($decision -eq 1) {
             return
         }
     }
 
-    $endpoint = "users/$identity"
+    $endpoint = "users/$($identity)"
 
     $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -Method DELETE
     return $graphResult
