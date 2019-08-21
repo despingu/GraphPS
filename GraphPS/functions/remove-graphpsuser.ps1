@@ -3,10 +3,6 @@ function Remove-GraphPSUser {
         [Parameter(Mandatory=$true, Position=0)]
         [string]$identity,
         [Parameter(Mandatory=$false)]
-        [string]$filterExpression,
-        [Parameter(Mandatory=$false)]
-        [string]$selectExpression,
-        [Parameter(Mandatory=$false)]
         [switch]$Force
     )
     if (-not (Test-Connection)) {
@@ -24,6 +20,6 @@ function Remove-GraphPSUser {
 
     $endpoint = "users/$($identity)"
 
-    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -Method DELETE
+    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -Method DELETE
     return $graphResult
 }
