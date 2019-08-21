@@ -90,11 +90,12 @@
         ".\functions\get-graphpscalendar.ps1",
         ".\functions\get-graphpscalendargroups.ps1",
         ".\functions\get-graphpsevents.ps1",
-        ".\functions\get-graphpsuser.ps1"
+        ".\functions\get-graphpsuser.ps1",
+        ".\functions\remove-graphpsuser.ps1"
     )
     
     # Functions to export from this module
-    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*'
+    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*','Remove-GraphPS*'
     
     # Cmdlets to export from this module
     CmdletsToExport = ''
