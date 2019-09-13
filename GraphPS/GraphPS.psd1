@@ -92,6 +92,7 @@
         ".\functions\get-graphpsevents.ps1",
         ".\functions\get-graphpsgroup.ps1",
         ".\functions\get-graphpsO365ActiveUserDetail.ps1",
+        ".\functions\get-graphpso365groupactivity.ps1",
         ".\functions\get-graphpsspsiteactivity.ps1"
         ".\functions\get-graphpsuser.ps1",
         ".\functions\remove-graphpsuser.ps1"
