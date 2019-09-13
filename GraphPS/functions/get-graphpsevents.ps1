@@ -7,9 +7,11 @@ function Get-GraphPSUserEvents {
         [Parameter(Mandatory=$false, ParameterSetName='defaultCalendar')]
         [switch]$default,
         [Parameter(Mandatory=$false)]
-        [string]$filterExpression,
+        [string]$FilterExpression,
         [Parameter(Mandatory=$false)]
-        [string]$selectExpression
+        [string]$SelectExpression,
+        [Parameter(Mandatory=$false)]
+        [string]$FormatExpression
     )
     if (-not (Test-Connection)) {
         return

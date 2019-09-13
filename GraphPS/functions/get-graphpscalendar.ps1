@@ -7,9 +7,11 @@ function Get-GraphPSUserCalendars {
         [Parameter(Mandatory=$false, ParameterSetName='defaultGroup')]
         [switch]$default,
         [Parameter(Mandatory=$false)]
-        [string]$filterExpression,
+        [string]$FilterExpression,
         [Parameter(Mandatory=$false)]
-        [string]$selectExpression
+        [string]$SelectExpression,
+        [Parameter(Mandatory=$false)]
+        [string]$FormatExpression
     )
     if (-not (Test-Connection)) {
         return
@@ -24,6 +26,6 @@ function Get-GraphPSUserCalendars {
     else {
         $endpoint = "users/$identity/calendars" # all calendars 
     }
-    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -Method GET
+    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -FormatExpression $FormatExpression -Method GET
     return $graphResult
 }

@@ -1,9 +1,11 @@
 function Get-GraphPSAuditLogsSignIns {
     param (
         [Parameter(Mandatory=$false)]
-        [string]$filterExpression,
+        [string]$FilterExpression,
         [Parameter(Mandatory=$false)]
-        [string]$selectExpression
+        [string]$SelectExpression,
+        [Parameter(Mandatory=$false)]
+        [string]$FormatExpression
     )
     if (-not (Test-Connection)) {
         return
@@ -11,6 +13,6 @@ function Get-GraphPSAuditLogsSignIns {
 
     $endpoint = "auditLogs/signIns"
 
-    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -Method GET
+    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -FormatExpression $FormatExpression -Method GET
     return $graphResult
 }

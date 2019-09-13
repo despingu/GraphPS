@@ -90,6 +90,9 @@
         ".\functions\get-graphpscalendar.ps1",
         ".\functions\get-graphpscalendargroups.ps1",
         ".\functions\get-graphpsevents.ps1",
+        ".\functions\get-graphpsgroup.ps1",
+        ".\functions\get-graphpsO365ActiveUserDetail.ps1",
+        ".\functions\get-graphpsspsiteactivity.ps1"
         ".\functions\get-graphpsuser.ps1",
         ".\functions\remove-graphpsuser.ps1"
     )

@@ -1,4 +1,4 @@
-function Get-GraphPSUsers {
+function Get-GraphPSGroups {
     param (
         [Parameter(Mandatory=$false)]
         [string]$FilterExpression,
@@ -11,13 +11,14 @@ function Get-GraphPSUsers {
         return
     }
 
-    $endpoint = "users"
+    $endpoint = "groups"
 
     $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -FormatExpression $FormatExpression -Method GET
     return $graphResult
 }
 
-function Get-GraphPSUser {
+
+function Get-GraphPSGroup {
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [string]$identity,
@@ -30,7 +31,7 @@ function Get-GraphPSUser {
         return
     }
 
-    $endpoint = "users/$identity"
+    $endpoint = "groups/$identity"
 
     $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -Method GET
     return $graphResult
