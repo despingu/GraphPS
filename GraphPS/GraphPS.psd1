@@ -91,6 +91,7 @@
         ".\functions\get-graphpscalendargroups.ps1",
         ".\functions\get-graphpsevents.ps1",
         ".\functions\get-graphpsgroup.ps1",
+        ".\functions\get-graphpsgroupowners.ps1",
         ".\functions\get-graphpsO365ActiveUserDetail.ps1",
         ".\functions\get-graphpso365groupactivity.ps1",
         ".\functions\get-graphpsspsiteactivity.ps1"
