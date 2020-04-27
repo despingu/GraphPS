@@ -11,7 +11,7 @@ function Set-AccessToken {
     $Script:token = "$($tokenInfo.token_type) $($tokenInfo.access_token)"
 }
 
-function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression) {
+function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatExpression) {
     $uri = "$($Script:graphUri)/$($Script:graphVersion)/$Endpoint"
     $expressions = @()
     if(-not [string]::IsNullOrEmpty($FilterExpression)) {
@@ -19,6 +19,9 @@ function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression) {
     }
     if(-not [string]::IsNullOrEmpty($SelectExpression)) {
         $expressions += "`$select=$SelectExpression"
+    }
+    if(-not [string]::IsNullOrEmpty($FormatExpression)) {
+        $expressions += "`$format=$FormatExpression"
     }
     if($expressions.count -gt 0) {
         $expressionStr = $expressions -join "&"
@@ -40,11 +43,13 @@ function Invoke-MSGraphQuery {
         [Parameter(Mandatory=$false)]
         [string] $SelectExpression, 
         [Parameter(Mandatory=$false)]
+        [string] $FormatExpression, 
+        [Parameter(Mandatory=$false)]
         [string]$Body, 
         [Parameter(Mandatory=$false)]
         [hashtable]$customHeader
     )
-    $Uri = Get-GraphUri -Endpoint $Endpoint -FilterExpression $FilterExpression -SelectExpression $SelectExpression
+    $Uri = Get-GraphUri -Endpoint $Endpoint -FilterExpression $FilterExpression -SelectExpression $SelectExpression -FormatExpression $FormatExpression
 
     if ((Get-Date) -ge $Script:tokenRenewTime) {
         $Script:token = Set-AccessToken
@@ -80,7 +85,7 @@ function Invoke-MSGraphQuery {
         } until ($null -eq $uri)
     }
     else  {
-        $Results = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json" -Body $Body
+        $QueryResults = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json" -Body $Body
     }
     Write-Progress -Id 1 -Activity "Executing query: $Uri" -Completed
     Return $QueryResults

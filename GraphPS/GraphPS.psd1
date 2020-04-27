@@ -86,15 +86,14 @@
     NestedModules = @(
         ".\functions\helpers.ps1",
         ".\functions\connection.ps1",
-        ".\functions\get-graphpsauditlog.ps1",
-        ".\functions\get-graphpscalendar.ps1",
-        ".\functions\get-graphpscalendargroups.ps1",
-        ".\functions\get-graphpsevents.ps1",
-        ".\functions\get-graphpsuser.ps1"
+        ".\functions\graphps-auditlogs.ps1",
+        ".\functions\graphps-groups.ps1",
+        ".\functions\graphps-reports.ps1",
+        ".\functions\graphps-user.ps1"
     )
     
     # Functions to export from this module
-    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*'
+    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*','Remove-GraphPS*', 'Add-GraphPS*', 'Test-GraphPS*'
     
     # Cmdlets to export from this module
     CmdletsToExport = ''
