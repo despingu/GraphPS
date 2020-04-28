@@ -1,10 +1,10 @@
 function Get-GraphPSGroups {
     param (
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$FilterExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$SelectExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$FormatExpression
     )
     if (-not (Test-Connection)) {
@@ -19,11 +19,11 @@ function Get-GraphPSGroups {
 
 function Get-GraphPSGroup {
     param (
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$identity,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$filterExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$selectExpression
     )
     if (-not (Test-Connection)) {
@@ -38,11 +38,11 @@ function Get-GraphPSGroup {
 
 function Get-GraphPSGroupMembers {
     param (
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$identity,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$filterExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$selectExpression
     )
     if (-not (Test-Connection)) {
@@ -56,11 +56,11 @@ function Get-GraphPSGroupMembers {
 
 function Get-GraphPSGroupOwners {
     param (
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$identity,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$filterExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$selectExpression
     )
     if (-not (Test-Connection)) {
@@ -75,16 +75,42 @@ function Get-GraphPSGroupOwners {
 
 function Add-GraphPSGroupMember {
     param (
-        [Parameter(Mandatory=$true, Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$identity,
-        [Parameter(Mandatory=$true, Position=1)]
-        [string]$Member
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'User')]
+        [string]$UserToAdd,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'Group')]
+        [string]$GroupToAdd,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'OrgContact')]
+        [string]$OrganizationContactToAdd,
+        [Parameter(Mandatory = $true, Position = 1, ParameterSetName = 'DirObj')]
+        [string]$DirectoryObjectToAdd
     )
     if (-not (Test-Connection)) {
         return
     }
     $endpoint = "/groups/$identity/members/`$ref"
+    $memberJson = $null
+    $graphResult = $null
 
-    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -Method POST -Body 
+    if ($null -ne $UserToAdd -and $Member.'@odata.type' -eq "#microsoft.graph.user") {
+        $memberJson = ConvertTo-Json $UserToAdd
+    }
+    elseif ($null -ne $GroupToAdd) {
+        Write-Error "Adding groups is not yet implemented."
+        return $graphResult
+    }
+    elseif ($null -ne $OrganizationContactToAdd) {
+        Write-Error "Adding organization contacts is not yet implemented."
+        return $graphResult
+    }
+    elseif ($null -ne $DirectoryObjectToAdd) {
+        Write-Error "Adding directory objects is not yet implemented."
+        return $graphResult
+    }
+
+    if (-not [string]::IsNullOrEmpty($memberJson)) {
+        $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -Method POST -Body $memberJson
+    }
     return $graphResult
 }
