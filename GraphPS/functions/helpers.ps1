@@ -61,7 +61,7 @@ function Invoke-MSGraphQuery {
     }
 
     $Header = @{} 
-    if($null -eq $customHeader) {
+    if($null -ne $customHeader) {
         $Header = $defaultHeader, $customHeader | Merge-Hashtables {$_[-1]}
     }
     else {

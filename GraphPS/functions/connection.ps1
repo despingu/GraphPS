@@ -12,7 +12,11 @@ function Connect-GraphPS {
         [Parameter(Mandatory=$false)]
         [string]$ResourceAppIdURI = "https://graph.microsoft.com/.default"
     )
-    
+    if ($Script:connected) {
+        Write-Error "You are already connected. Please run Disconnect-GraphPS cmdlet before running this command."
+        return
+    }
+
     $Script:tenantName = $TenantName
     $Script:clientID = $AppID
     $Script:clientSecret = $AppSecret
