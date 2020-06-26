@@ -49,10 +49,23 @@ function Get-GraphPSConnectionInfo {
 }
 
 function Test-Connection {
+    param(
+        [Parameter(Mandatory=$false)]
+        [ValidateSet('beta','v1.0')]
+        [string]$RequiredVersion
+    )
     $isValid = $true
     if (-not $Script:connected) {
         Write-Error "Please run Connect-GraphPS cmdlet before running this command."
         $isValid = $false
+    }
+    else {
+        if (-not ([string]::IsNullOrEmpty($RequiredVersion))) {
+            if($Script:graphVersion -ne $RequiredVersion) {
+                Write-Error "This command requires a connection with Graph version $requiredVersion."
+                $isValid = $false
+            }
+        }
     }
     return $isValid
 }

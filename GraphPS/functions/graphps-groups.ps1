@@ -84,10 +84,26 @@ function Add-GraphPSGroupMember {
         return
     }
     $endpoint = "groups/$identity/members/`$ref"
-    $memberJson = ConvertTo-Json @{ "@odata.id" = "https://graph.microsoft.com/v1.0/directoryObjects/$ObjectId" }
+    $memberJson = ConvertTo-Json @{ "@odata.id" = "https://graph.microsoft.com/$Script:graphVersion/directoryObjects/$ObjectId" }
 
     if (-not [string]::IsNullOrEmpty($memberJson)) {
         $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -Method POST -Body $memberJson
     }
+    return $graphResult
+}
+
+function Remove-GraphPSGroupMember {
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$identity,
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string]$ObjectId
+    )
+    if (-not (Test-Connection)) {
+        return
+    }
+    $endpoint = "groups/$identity/members/$objectId/`$ref"
+    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -Method DELETE
+    
     return $graphResult
 }
