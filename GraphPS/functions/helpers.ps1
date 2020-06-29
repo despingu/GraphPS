@@ -54,7 +54,7 @@ function Invoke-MSGraphQuery {
     if ((Get-Date) -ge $Script:tokenRenewTime) {
         $Script:token = Set-AccessToken
     }
-    Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Invoking MS Graph API"
+    #Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Invoking MS Graph API"
     $defaultHeader = @{
         'Content-Type'  = 'application\json'
         'Authorization' = $Script:token
@@ -73,7 +73,7 @@ function Invoke-MSGraphQuery {
         $i = 0
         do {
             $i++
-            Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Fetching page $i"
+            #Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Fetching page $i"
             $Results = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json"
             if ($null -ne $Results.value) {
                 $QueryResults += $Results.value
@@ -87,7 +87,7 @@ function Invoke-MSGraphQuery {
     else  {
         $QueryResults = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json" -Body $Body
     }
-    Write-Progress -Id 1 -Activity "Executing query: $Uri" -Completed
+    #Write-Progress -Id 1 -Activity "Executing query: $Uri" -Completed
     Return $QueryResults
 }
 
