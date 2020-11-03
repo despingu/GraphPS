@@ -12,7 +12,7 @@
     RootModule = '.\GraphPS.psm1'
     
     # Version number of this module.
-    ModuleVersion = '0.1.20.0629'
+    ModuleVersion = '0.1.20.1103'
     
     # ID used to uniquely identify this module
     GUID = 'a5fa7019-c6d4-4ade-9f6f-a028abb47378'

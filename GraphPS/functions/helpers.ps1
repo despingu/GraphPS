@@ -73,8 +73,36 @@ function Invoke-MSGraphQuery {
         $i = 0
         do {
             $i++
+            #<old>
             #Write-Progress -Id 1 -Activity "Executing query: $Uri" -CurrentOperation "Fetching page $i"
-            $Results = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json"
+            # try {
+            #     $Results = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json"    
+            # }
+            # catch {
+            #     Write-Output "Error Message: $($_.Exception.Message)"
+            # }
+            #</old>
+            #<new>
+            do {
+                $retry = $false
+                try {
+                    $Response = Invoke-WebRequest -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json"
+                }
+                catch {
+                    Write-Host "Error Message: $($_.Exception.Message)"
+                    $retryInSeconds = [int]$_.Exception.Response.Headers.'Retry-After'
+                }
+                
+                if ($retryInSeconds -gt 0) {
+                    Write-Host "Retry-After: $($retryInSeconds)"
+                    $retry = $true
+                    Start-Sleep -s ($retryInSeconds + 1)
+                    $retryInSeconds = 0
+                }
+            } while ($retry)
+
+            $Results = $Response.Content | ConvertFrom-Json
+            # </new>
             if ($null -ne $Results.value) {
                 $QueryResults += $Results.value
             }
