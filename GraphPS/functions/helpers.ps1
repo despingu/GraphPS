@@ -1,10 +1,10 @@
 function Set-AccessToken {
     $logonUrl = "https://login.microsoftonline.com/$Script:tenantName/oauth2/v2.0/token"
     $body = @{
-        "client_id" = $Script:clientID;
+        "client_id"     = $Script:clientID;
         "client_secret" = $Script:clientSecret;
-        "scope" = $Script:resourceAppIdURI;
-        "grant_type" = "client_credentials"
+        "scope"         = $Script:resourceAppIdURI;
+        "grant_type"    = "client_credentials"
     }
     $tokenInfo = Invoke-RestMethod -Method Post -Uri $logonUrl -Body $body
     $Script:tokenRenewTime = (Get-Date).AddSeconds($tokenInfo.expires_in)
@@ -14,16 +14,16 @@ function Set-AccessToken {
 function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatExpression) {
     $uri = "$($Script:graphUri)/$($Script:graphVersion)/$Endpoint"
     $expressions = @()
-    if(-not [string]::IsNullOrEmpty($FilterExpression)) {
+    if (-not [string]::IsNullOrEmpty($FilterExpression)) {
         $expressions += "`$filter=$FilterExpression"
     }
-    if(-not [string]::IsNullOrEmpty($SelectExpression)) {
+    if (-not [string]::IsNullOrEmpty($SelectExpression)) {
         $expressions += "`$select=$SelectExpression"
     }
-    if(-not [string]::IsNullOrEmpty($FormatExpression)) {
+    if (-not [string]::IsNullOrEmpty($FormatExpression)) {
         $expressions += "`$format=$FormatExpression"
     }
-    if($expressions.count -gt 0) {
+    if ($expressions.count -gt 0) {
         $expressionStr = $expressions -join "&"
         $uri += "?$expressionStr" 
     }
@@ -33,20 +33,20 @@ function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatE
 
 function Invoke-MSGraphQuery {
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$Endpoint,
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('GET','POST','PATCH','PUT','DELETE')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('GET', 'POST', 'PATCH', 'PUT', 'DELETE')]
         [string]$Method, 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$FilterExpression,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string] $SelectExpression, 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string] $FormatExpression, 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$Body, 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [hashtable]$customHeader
     )
     $Uri = Get-GraphUri -Endpoint $Endpoint -FilterExpression $FilterExpression -SelectExpression $SelectExpression -FormatExpression $FormatExpression
@@ -61,8 +61,8 @@ function Invoke-MSGraphQuery {
     }
 
     $Header = @{} 
-    if($null -ne $customHeader) {
-        $Header = $defaultHeader, $customHeader | Merge-Hashtables {$_[-1]}
+    if ($null -ne $customHeader) {
+        $Header = $defaultHeader, $customHeader | Merge-Hashtables { $_[-1] }
     }
     else {
         $Header = $defaultHeader
@@ -90,7 +90,10 @@ function Invoke-MSGraphQuery {
                 }
                 catch {
                     Write-Host "Error Message: $($_.Exception.Message)"
-                    $retryInSeconds = [int]$_.Exception.Response.Headers.'Retry-After'
+                    $retryInSeconds = [int]$_.Exception.Response.Headers["Retry-After"]
+                    if ($null -eq $retryInSeconds) {
+                        throw $_
+                    }
                 }
                 
                 if ($retryInSeconds -gt 0) {
@@ -112,7 +115,7 @@ function Invoke-MSGraphQuery {
             $uri = $Results.'@odata.nextlink'
         } until ($null -eq $uri)
     }
-    else  {
+    else {
         $QueryResults = Invoke-RestMethod -Headers $Header -Uri $Uri -Method $Method -ContentType "application/json" -Body $Body
     }
     #Write-Progress -Id 1 -Activity "Executing query: $Uri" -Completed
@@ -159,9 +162,9 @@ Function Merge-Hashtables([ScriptBlock]$Operator) {
     $Output = @{}
     ForEach ($Hashtable in $Input) {
         If ($Hashtable -is [Hashtable]) {
-            ForEach ($Key in $Hashtable.Keys) {$Output.$Key = If ($Output.ContainsKey($Key)) {@($Output.$Key) + $Hashtable.$Key} Else  {$Hashtable.$Key}}
+            ForEach ($Key in $Hashtable.Keys) { $Output.$Key = If ($Output.ContainsKey($Key)) { @($Output.$Key) + $Hashtable.$Key } Else { $Hashtable.$Key } }
         }
     }
-    If ($Operator) {ForEach ($Key in @($Output.Keys)) {$_ = @($Output.$Key); $Output.$Key = Invoke-Command $Operator}}
+    If ($Operator) { ForEach ($Key in @($Output.Keys)) { $_ = @($Output.$Key); $Output.$Key = Invoke-Command $Operator } }
     $Output
 }
