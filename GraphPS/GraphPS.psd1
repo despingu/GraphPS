@@ -12,7 +12,7 @@
     RootModule = '.\GraphPS.psm1'
     
     # Version number of this module.
-    ModuleVersion = '0.1.21.0310'
+    ModuleVersion = '0.1.21.0713'
     
     # ID used to uniquely identify this module
     GUID = 'a5fa7019-c6d4-4ade-9f6f-a028abb47378'
@@ -89,11 +89,12 @@
         ".\functions\graphps-auditlogs.ps1",
         ".\functions\graphps-groups.ps1",
         ".\functions\graphps-reports.ps1",
-        ".\functions\graphps-user.ps1"
+        ".\functions\graphps-user.ps1",
+        ".\functions\graphps-mail.ps1"
     )
     
     # Functions to export from this module
-    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*','Remove-GraphPS*', 'Add-GraphPS*', 'Update-GraphPS*', 'Test-GraphPS*'
+    FunctionsToExport = 'Connect-GraphPS','Disconnect-GraphPS','Get-GraphPS*','Remove-GraphPS*', 'Add-GraphPS*', 'Update-GraphPS*', 'Test-GraphPS*', 'Send-GraphPS*'
     
     # Cmdlets to export from this module
     CmdletsToExport = ''
