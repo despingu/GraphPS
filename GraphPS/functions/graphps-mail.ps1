@@ -1,3 +1,28 @@
+function Get-GraphPSMessages {
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$identity,
+        [Parameter(Mandatory=$false)]
+        [int]$top,
+        [Parameter(Mandatory=$false)]
+        [string]$filterExpression,
+        [Parameter(Mandatory = $false)]
+        [string]$selectExpression
+    )
+    if (-not (Test-Connection)) {
+        return
+    }
+
+    $endpoint = "users/$identity/messages"
+    $CustomExpressions = $null
+    if ($null -ne $top) {
+        $CustomExpressions = @("`$top=$top")
+    }
+
+    $graphResult = Invoke-MSGraphQuery -Endpoint $endpoint -FilterExpression $filterExpression -SelectExpression $selectExpression -CustomExpressions $CustomExpressions -Method GET
+    return $graphResult
+}
+
 function Send-GraphPSMail {
     param (
         [Parameter(Mandatory = $true, Position = 0)]

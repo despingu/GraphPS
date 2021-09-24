@@ -11,7 +11,7 @@ function Set-AccessToken {
     $Script:token = "$($tokenInfo.token_type) $($tokenInfo.access_token)"
 }
 
-function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatExpression) {
+function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatExpression, [array]$CustomExpressions) {
     $uri = "$($Script:graphUri)/$($Script:graphVersion)/$Endpoint"
     $expressions = @()
     if (-not [string]::IsNullOrEmpty($FilterExpression)) {
@@ -22,6 +22,9 @@ function Get-GraphUri ($Endpoint, $FilterExpression, $SelectExpression, $FormatE
     }
     if (-not [string]::IsNullOrEmpty($FormatExpression)) {
         $expressions += "`$format=$FormatExpression"
+    }
+    if ($null -ne $CustomExpressions -and $CustomExpressions.Count -gt 0) {
+        $expressions += $CustomExpressions
     }
     if ($expressions.count -gt 0) {
         $expressionStr = $expressions -join "&"
@@ -45,11 +48,13 @@ function Invoke-MSGraphQuery {
         [Parameter(Mandatory = $false)]
         [string] $FormatExpression, 
         [Parameter(Mandatory = $false)]
-        [string]$Body, 
+        [string]$Body,
         [Parameter(Mandatory = $false)]
-        [hashtable]$customHeader
+        [hashtable]$customHeader,
+        [Parameter(Mandatory = $false)]
+        [array]$CustomExpressions
     )
-    $Uri = Get-GraphUri -Endpoint $Endpoint -FilterExpression $FilterExpression -SelectExpression $SelectExpression -FormatExpression $FormatExpression
+    $Uri = Get-GraphUri -Endpoint $Endpoint -FilterExpression $FilterExpression -SelectExpression $SelectExpression -FormatExpression $FormatExpression -CustomExpressions $CustomExpressions
 
     if ((Get-Date) -ge $Script:tokenRenewTime) {
         $Script:token = Set-AccessToken
