@@ -5,7 +5,7 @@ function Connect-GraphPS {
         [Parameter(Mandatory=$true)]
         [string]$AppID,
         [Parameter(Mandatory=$true)]
-        [string]$AppSecret,
+        [securestring]$AppSecret,
         [Parameter(Mandatory=$false)]
         [ValidateSet('beta','v1.0')]
         [string]$Version = 'v1.0',
@@ -18,18 +18,16 @@ function Connect-GraphPS {
     }
 
     $Script:tenantName = $TenantName
-    $Script:clientID = $AppID
-    $Script:clientSecret = $AppSecret
+    $Script:AppCredential = New-Object System.Management.Automation.PSCredential -ArgumentList @($AppID, $AppSecret)
     $Script:resourceAppIdURI = $ResourceAppIdURI
     $Script:graphVersion = $Version
-    Set-AccessToken -TenantName $TenantName -ClientID $AppID -ClientSecret $AppSecret -ResourceAppIdURI $ResourceAppIdURI
+    Set-AccessToken
     $Script:connected = $true
 }
 
 function Disconnect-GraphPS {
     $Script:tenantName = [string]::Empty
-    $Script:clientID = [string]::Empty
-    $Script:clientSecret = [string]::Empty
+    $Script:AppCredential = $null
     $Script:resourceAppIdURI = [string]::Empty
     $Script:token = [string]::Empty
     $Script:tokenRenewTime = [datetime]::MinValue

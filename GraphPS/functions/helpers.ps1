@@ -1,8 +1,8 @@
 function Set-AccessToken {
     $logonUrl = "https://login.microsoftonline.com/$Script:tenantName/oauth2/v2.0/token"
     $body = @{
-        "client_id"     = $Script:clientID;
-        "client_secret" = $Script:clientSecret;
+        "client_id"     = $Script:AppCredential.UserName;
+        "client_secret" = $Script:AppCredential.GetNetworkCredential().Password;
         "scope"         = $Script:resourceAppIdURI;
         "grant_type"    = "client_credentials"
     }
